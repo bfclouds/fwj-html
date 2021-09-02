@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <title>Document</title>
+  <style>
+    ul,li {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .user-btn-list {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 30px;
+    }
+    .user-item {
+      position: relative;
+      margin: 30px 0;
+      padding: 0 20px;
+      height: 40px;
+      line-height: 40px;
+      border-radius: 20px;
+      background: #f5f6fa;
+      color: #7f8fa6;
+      cursor: pointer;
+      -webkit-box-reflect: below 2px linear-gradient(transparent, rgba(0, 0, 0, .1));
+      transition: all .1s linear;
+      overflow: hidden;
+    }
+    .user-item:hover{
+      transform: scale(1.1);
+    }
+    .user-item.is-active {
+      background: #0097e6;
+      color: #fff;
+    }
+    .user-item:not(:first-child) {
+      margin-left: 20px;
+    }
+    .user-item.is-active.animation-twinkle {
+      background: #fbc531;
+      box-shadow: inset 0 0 4px 2px #fbc531, 0 0 4px 2px #fbc531;
+    }
+    .user-count-input {
+      display: inline-block;
+      margin-bottom: 20px;
+      width: 100px;
+      height: 40px;
+      border-color: #f5f6fa;
+      border-style: solid;
+      text-align: center;
+      font-size: 20px;
+    }
+    .btn-container {
+      display: flex;
+      justify-content: center;
+    }
+    .btn-container button {
+      margin-right: 20px;
+      border: none;
+      height: 40px;
+      padding: 0 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .selected-user {
+      margin: 20px;
+      line-height: 40px;
+      background-color: #f5f6fa;
+    }
+    .log-list {
+      display: inline-block;
+      text-align: left;
+    }
+    .log-list li {
+      line-height: 30px;
+      margin: 14px 20px;
+      border-bottom: 1px solid #f5f6fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" style="text-align: center;">
+    <ul class="user-btn-list" onclick="clickItem(event)"></ul>
+    <input class="user-count-input" value="0" onchange="changeInput(event)" placeholder="筛选人数" type="number">
+    <div class="btn-container">
+      <button onclick="startRand()">开始筛选</button>
+      <button onclick="window.location.reload()">重置</button>
+      <button class="skip-animation" onclick="skipAnimation()"></button>
+    </div>
+    <p class="selected-user">
+      恭喜🎉：<span class="random-result"></span>
+    </p>
+    <div class="log-container">
+      <h4>历史记录</h4>
+      <ul class="log-list">
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    let userList = []
+    let selecedUserList = []
+    let resultUserList = []
+    let randomCount = 5
+
+    const BASE_TIME = 70
+    const MAX_LOG_LEN = 5
+    const RANDOM_RES_LOG = 'randomResultLog'
+    const USER_LIST= 'userList'
+
+    let baseTime = BASE_TIME
+
+    const userBtnListRef = document.querySelector(".user-btn-list")
+
+    function clickItem(event) {
+      const target = event.target
+      if (target.tagName !== 'LI') {
+        return
+      }
+      const name = target.outerText
+      if (!userList.includes(name)) {
+        return
+      }
+      const index = selecedUserList.findIndex(item => item === name)
+      if (index !== -1) {
+        selecedUserList.splice(index, 1)
+      } else {
+        selecedUserList.push(name)
+      }
+      if (selecedUserList.length < randomCount) {
+        randomCount = selecedUserList.length
+        updateInpute()
+      }
+      updateUserList()
+    }
+
+    function updateUserList() {
+      let userItemList = userList.map((item, index) => {
+        return `
+          <li class="user-item ${selecedUserList.includes(item) && 'is-active'}">
+            ${item}
+          </li>
+        `
+      })
+      userBtnListRef.innerHTML = userItemList.join("")
+    }
+
+    function updateInpute() {
+      const inputRef = document.querySelector(".user-count-input")
+      inputRef.value = randomCount
+    }
+
+    function changeInput(event) {
+      const val = Number(event.target.value)
+      if (typeof val !== 'number' || val > selecedUserList.length || val == 0) {
+        alert('请输入大于0且小于等于选择人数的数：', val)
+        event.target.value = 5
+        return
+      }
+      randomCount = val
+    }
+
+    function skipAnimation() {
+      baseTime = baseTime === 1 ? BASE_TIME : 1
+      updateSkipAnimationText()
+    }
+    
+    function updateSkipAnimationText() {
+      const dom = document.querySelector('.skip-animation')
+      dom.innerText = baseTime === 1 ? '开启动画' : '跳过动画'
+    }
+
+    function startAnimation() {
+      let count = randomCount * 2
+      let calcUserList = []
+      const selectedUserListRef = document.querySelectorAll('.user-item.is-active')
+      let lock = false
+
+      function animation(cbArr) {
+        if (resultUserList.length === randomCount && calcUserList.length === resultUserList.length) {
+          return
+        }
+        if (resultUserList.length !== randomCount) {
+          count = randomCount * 2
+        }
+        for (let index = 0; index < selectedUserListRef.length; index++) {
+          const element = selectedUserListRef[index];
+          const laseElement = selectedUserListRef[index === 0 ? selectedUserListRef.length - 1 : index - 1]
+          setTimeout(() => {
+            element.classList.add('animation-twinkle')
+            laseElement.style.background = `rgba(251, 197, 49, .6)`
+          }, index * (resultUserList.length === 0 ? BASE_TIME : baseTime))
+
+          if (count % 2 !== 0) {
+            if (lock === false && element.innerText === resultUserList[calcUserList.length]) {
+              calcUserList.push(element.innerText)
+              lock = true
+            }
+          } else {
+            lock = false
+          }
+
+          if (!calcUserList.includes(element.innerText)) {
+            setTimeout(() => {
+              element.classList.remove('animation-twinkle')
+              laseElement.style.background = ''
+              if (index === selectedUserListRef.length - 1 && count > 0) {
+                animation(cbArr)
+              }
+            }, (index + 1) * (resultUserList.length === 0 ? BASE_TIME : baseTime))
+          } else {
+            setTimeout(() => {
+              laseElement.style.background = ''
+              if (index === selectedUserListRef.length - 1 && count > 0) {
+                animation(cbArr)
+              }
+            }, (index + 1) * baseTime)
+          }
+        }
+        count--
+        if (count === 0) {
+          cbArr.forEach(item => item())
+        }
+      }
+      animation([innerResult, initLogList])
+    }
+
+    async function startRand() {
+      resultUserList = []
+      innerResult()
+      startAnimation()
+
+      const userSet = new Set()
+      while(Array.from(userSet).length < randomCount) {
+        const index = await fetchGetRandom(selecedUserList.length-1, 0, selecedUserList.length * 3)
+        let indexArr = index.split("\n")
+        indexArr.pop()
+        indexArr = [...new Set(indexArr)].splice(0, randomCount)
+        indexArr.forEach(itemIndex => {
+          userSet.add(selecedUserList[itemIndex * 1])
+        })
+      }
+
+      resultUserList = Array.from(userSet)
+      addResLogList(resultUserList.join("、"))
+    }
+
+    function fetchGetRandom(max, min = 0, count) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('get', `https://www.random.org/integers/?num=${count}&min=${min}&max=${max}&col=1&base=10&format=plain&rnd=new`)
+        xhr.onreadystatechange = function () {
+          if (this.readyState === 4) {
+            if (this.status === 200) {
+              resolve(this.responseText);
+            } else {
+              reject(this.responseText);
+            }
+          }
+        };
+        xhr.send()
+      })
+    }
+    
+    function addResLogList(str) {
+      if (typeof str !== 'string') {
+        return
+      }
+      let resLog = window.localStorage.getItem(RANDOM_RES_LOG)
+      if (!resLog) {
+        window.localStorage.setItem(RANDOM_RES_LOG, JSON.stringify([str]))
+      } else {
+        resLog = JSON.parse(resLog)
+
+        while(resLog.length >= MAX_LOG_LEN) {
+          resLog.splice(resLog.length - 1, 1)
+        }
+        resLog.unshift(str)
+        window.localStorage.setItem(RANDOM_RES_LOG, JSON.stringify(resLog))
+      }
+    }
+
+    function innerResult(resList = resultUserList) {
+      const randomResultuserNameRef = document.querySelector(".random-result")
+      randomResultuserNameRef.innerText = resList.join("、")
+    }
+
+    function initUserList() {
+      const searchObj = (new URL(document.location)).searchParams;
+      const initUserList = searchObj.get('dataList')
+      if (initUserList) {
+        userList = initUserList.split(',')
+        randomCount = userList.length > 5 ? 5 : userList.length
+
+        window.localStorage.setItem(USER_LIST, JSON.stringify(userList))
+      } else {
+        const localUserList = window.localStorage.getItem(USER_LIST)
+        userList = localUserList ? JSON.parse(localUserList) : []
+      }
+
+      selecedUserList = JSON.parse(JSON.stringify(userList))
+    }
+
+    function initLogList() {
+      let resLog = window.localStorage.getItem(RANDOM_RES_LOG)
+      if (!resLog) {
+        return
+      }
+      resLog = JSON.parse(resLog)
+      if (Array.isArray(resLog)) {
+        const htmlStr = resLog.map(itemStr => `<li>${itemStr}</li>`).join('')
+        document.querySelector('.log-list').innerHTML = htmlStr
+      }
+    }
+
+    window.onload = () => {
+      updateSkipAnimationText()
+      initUserList()
+      initLogList()
+      updateUserList()
+      updateInpute()
+    }
+  </script>
+</body>
+</html>
