@@ -251,7 +251,7 @@
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest()
         // xhr.open('get', `https://www.random.org/integers/?num=${count}&min=${min}&max=${max}&col=1&base=10&format=plain&rnd=new`)
-        xhr.open('get', `https://www.random.org/integer-sets/?sets=1&num=${count}&min=${min}&max=${max}&order=random&format=plain&rnd=new`)
+        xhr.open('get', `https://www.random.org/integer-sets/?sets=1&num=${count}&min=${min}&max=${max}&order=index&format=plain&rnd=new`)
         xhr.onreadystatechange = function () {
           if (this.readyState === 4) {
             if (this.status === 200) {
