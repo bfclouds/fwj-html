@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      list-style: none;
+    }
+    .wrapper {
+      padding: 0 30px;
+    }
+    .swipper {
+      padding: 0;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: flex-start;
+      background-color: #fff;
+      border: 1px solid red;
+    }
+    .swipper .swipper-item {
+      min-width: 136px;
+    }
+    .swipper .swipper-item:not(:last-child) {
+      margin-right: 16px;
+    }
+    .swipper .swipper-item > img {
+      width: 120px;
+      height: 78px;
+    }
+    .swipper .swipper-item > p {
+      text-align: center;
+    }
+
+    .ad-list {
+      /* width: 600px; */
+      margin: 50px auto;
+    }
+    .ad-list .ad-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 50px;
+      /* background-color: rgb(238, 236, 236, .8); */
+      border-radius: 6px;
+      overflow: hidden;
+      text-align: center;
+      box-sizing: border-box;
+      border: 1px solid red;
+
+    }
+    .ad-list .ad-item > img {
+      display: inline-block;
+      width: 387px;
+      height: 462px;
+      margin-left: 80px;
+    }
+    .ad-list-item_text {
+      display: inline-block;
+    }
+    .ad-list-item_text > h4 {
+      font-size: 30px;
+      font-weight: 600;
+    }
+    .ad-list-item_text > p {
+      font-size: 18px;
+      color: rgba(0, 0, 0, .8);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <ul class="swipper">
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-mac-nav-202108?wid=400&hei=260&fmt=png-alpha&.v=1625783380000" alt="">
+        <p>Mac</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-iphone-nav-202109_GEO_US?wid=400&hei=260&fmt=png-alpha&.v=1630706116000" alt="">
+        <p>Iphone</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-ipad-nav-202108?wid=400&hei=260&fmt=png-alpha&.v=1625783381000" alt="">
+        <p>ipad</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-watch-nav-202108?wid=400&hei=260&fmt=png-alpha&.v=1625783378000" alt="">
+        <p>Apple Watch</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-airpods-nav-202108?wid=400&hei=260&fmt=png-alpha&.v=1627410283000" alt="">
+        <p>AirPods</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-airtags-nav-202108?wid=400&hei=260&fmt=png-alpha&.v=1625783380000" alt="">
+        <p>AirTag</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-appletv-nav-202108?wid=400&hei=260&fmt=png-alpha&.v=1625783378000" alt="">
+        <p>Apple TV</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-homepod-mini-nav-202108?wid=400&hei=260&fmt=png-alpha&.v=1625783386000" alt="">
+        <p>HomePod mini</p>
+      </li>
+      <li class="swipper-item">
+        <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-13-accessories-nav-202109?wid=400&hei=260&fmt=png-alpha&.v=1629942986000" alt="">
+        <p>Accessories</p>
+      </li>
+    </ul>
+    <ul class="ad-list">
+      <li class="ad-item">
+        <div class="ad-list-item_text">
+          <h4>ipad Air</h4>
+          <p>Powerfil.Colorfil.Wonderful.</p>
+        </div>
+        <img src="https://www.apple.com/v/ipad/home/bp/images/overview/hero/ipad_air__d794tkovmk02_medium_2x.jpg" alt="">
+      </li>
+      <li class="ad-item">
+        <div class="ad-list-item_text">
+          <h4>ipad Air</h4>
+          <p>Powerfil.Colorfil.Wonderful.</p>
+        </div>
+        <img src="https://www.apple.com/v/ipad/home/bp/images/overview/hero/ipad_air__d794tkovmk02_medium_2x.jpg" alt="">
+      </li>
+    </ul>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/ScrollTrigger.min.js"></script>
+  <script>
+
+    function init() {
+      gsap.registerPlugin(ScrollTrigger)
+      const swipperItemRefs = gsap.utils.toArray('.swipper-item')
+      const swipperRef = document.querySelector('.swipper')
+      const xPercentWidth = 136 * swipperItemRefs.length - swipperRef.clientWidth - 10
+      gsap.to(swipperItemRefs, {
+        xPercent: Math.min(0, -xPercentWidth),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.swipper',
+          start: '0 top',
+          end: () => `+=1000 bottom`,
+          scrub: 1,
+          pin: true,
+          pinSpacing: false,
+          markers: true
+        }
+      })
+
+      const tl1 = gsap.timeline()
+      ScrollTrigger.create({
+        animation: tl1,
+        trigger: '.ad-list',
+        start: 'top 137',
+        end: '88 137',
+        pin: true,
+        // markers: true,
+        pinSpacing: false,
+      })
+    }
+
+    window.onload = function() {
+      init()
+    }
+    
+  </script>
+</body>
+</html>

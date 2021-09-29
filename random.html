@@ -237,15 +237,11 @@
       startAnimation()
 
       const userSet = new Set()
-      while(Array.from(userSet).length < randomCount) {
-        const index = await fetchGetRandom(selecedUserList.length-1, 0, selecedUserList.length * 3)
-        let indexArr = index.split("\n")
-        indexArr.pop()
-        indexArr = [...new Set(indexArr)].splice(0, randomCount)
-        indexArr.forEach(itemIndex => {
-          userSet.add(selecedUserList[itemIndex * 1])
-        })
-      }
+      let valText = await fetchGetRandom(selecedUserList.length-1, 0, randomCount)
+      let indexArr = valText.split(" ")
+      indexArr.forEach(itemIndex => {
+        userSet.add(selecedUserList[itemIndex * 1])
+      })
 
       resultUserList = Array.from(userSet)
       addResLogList(resultUserList.join("、"))
@@ -254,7 +250,8 @@
     function fetchGetRandom(max, min = 0, count) {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest()
-        xhr.open('get', `https://www.random.org/integers/?num=${count}&min=${min}&max=${max}&col=1&base=10&format=plain&rnd=new`)
+        // xhr.open('get', `https://www.random.org/integers/?num=${count}&min=${min}&max=${max}&col=1&base=10&format=plain&rnd=new`)
+        xhr.open('get', `https://www.random.org/integer-sets/?sets=1&num=${count}&min=${min}&max=${max}&order=random&format=plain&rnd=new`)
         xhr.onreadystatechange = function () {
           if (this.readyState === 4) {
             if (this.status === 200) {
