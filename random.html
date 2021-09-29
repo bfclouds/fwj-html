@@ -131,7 +131,19 @@
       if (index !== -1) {
         selecedUserList.splice(index, 1)
       } else {
-        selecedUserList.push(name)
+        const rIndex = userList.findIndex(rItem => rItem === name)
+        let isInner = false
+        for(let i = rIndex - 1; i >= 0; i--) {
+          const iIndex = selecedUserList.findIndex(iIndexItem => userList[i] && iIndexItem === userList[i])
+          if (iIndex !== -1) {
+            selecedUserList.splice(iIndex + 1, 0, name)
+            isInner = true
+            break
+          }
+        }
+        if (!isInner) {
+          selecedUserList.unshift(name)
+        }
       }
       if (selecedUserList.length < randomCount) {
         randomCount = selecedUserList.length
