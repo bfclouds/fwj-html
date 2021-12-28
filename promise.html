@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+
+  </div>
+  <script>
+    const resolvePromise = (promise2, x, resolve, reject) => {
+      let called;
+      if ((typeof x === 'object' && x !== null) || typeof x === 'function') {
+        try {
+          let then = x.then;
+          if (typeof then === 'function') {
+            then.call(x, (y) => {
+              if (called) {
+                console.log('返回了');
+                return;
+              }
+              called = true;
+              resolvePromise(promise2, y, resolve, reject);
+            }, thisReject => {
+              if (called) return;
+              called = true;
+              reject(thisReject);
+            });
+          } else {
+            // 如果.then就是个普通值，直接返回resolve作为结果
+            resolve(x);
+          }
+        } catch(err) {
+          if (called) return;
+          called = true;
+          reject(err);
+        }
+      } else {
+        resolve(x)
+      }
+    }
+    
+    const PENDING = 'PENDING'
+    const FULFILLED = 'FULFILLED'
+    const REJECTED = 'REJECTED'
+
+    class Promise {
+      constructor(executor) {
+        this.status = PENDING
+        this.value = undefined
+        this.reason = undefined
+
+        this.onResolvedCallbacks = []
+        this.onRejectedCallbacks = []
+
+        let reject = (reason) => {
+          if(this.status === PENDING) {
+            this.status = REJECTED
+            this.value = reason
+            this.onRejectedCallbacks.forEach(fn => fn())
+          }
+        }
+
+        let resolve = (value) => {
+          if (value instanceof Promise) {
+            return value.then(resolve, reject)
+          }
+          if (this.status === PENDING) {
+            this.status = FULFILLED
+            this.value = value
+            this.onResolvedCallbacks.forEach(fn => fn())
+          }
+        }
+
+        try {
+          executor(resolve, reject)
+        } catch(err) {
+          console.log(err);
+        }
+      }
+      then(onFulfilled, onRejected) {
+        // 防止未赋值的情况
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v;
+        onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err };
+        let promise2 = new Promise((resolve, reject) => {
+          if (this.status === FULFILLED) {
+            setTimeout(() => {
+              try {
+                let x = onFulfilled(this.value)
+                console.log('value >>> ', this.value)
+                resolvePromise(promise2, x, resolve, reject)
+              } catch(err) {
+                reject(err)
+              }
+            })
+          }
+          if (this.status === REJECTED) {
+            setTimeout(() => {
+              try {
+                let x = onRejected(this.reason)
+                resolvePromise(promise2, x, resolve, reject)
+              } catch(err) {
+                reject(err)
+              }
+            })
+          }
+          if (this.status === PENDING) {
+            this.onResolvedCallbacks.push(() => {
+              setTimeout(() => {
+                try {
+                  let x = onFulfilled(this.value)
+                  resolvePromise(promise2, x, resolve, reject)
+                } catch(err) {
+                  reject(err)
+                }
+              })
+            })
+            this.onRejectedCallbacks.push(() => {
+              setTimeout(() => {
+                try {
+                  console.log(1234);
+                  let x = onRejected(this.reason)
+                  resolvePromise(promise2, x, resolve, reject)
+                } catch(err) {
+                  reject(err)
+                }
+              })
+            })
+          }
+        })
+
+        return promise2
+      }
+      static resolve(data) {
+        console.log(data);
+        return new Promise((resolve) => {
+          console.log(data);
+          resolve(data)
+        })
+      }
+      static reject(data) {
+        return new Promise((resolve, reject) => {
+          reject(data)
+        })
+      }
+      static all(values) {
+        if (!Array.isArray(values)) {
+          const type = typeof values
+          return new TypeError(`TypeError: ${type} ${values} is not iterable`)
+        }
+
+        return new Promise((resolve, reject) => {
+          let resultArr = []
+          let orderIndex = 0
+          const processResultByKey = (value, index) => {
+            if (++index === resultArr.length) {
+              resolve(resultArr)
+            }
+          }
+
+          for (let index = 0; index < values.length; index++) {
+            const valueItem = values[index];
+            if (valueItem.then && typeof valueItem.then === 'function') {
+              valueItem.then(() => {
+                processResultByKey(valueItem, index)
+              }, reject)
+            } else {
+              processResultByKey(valueItem, index)
+            }
+          }
+        })
+      }
+    }
+
+    Promise.prototype.all = function() {
+
+    }
+    
+    // const promice = new Promise((resolve, reject) => {
+    //   setTimeout(() => {
+    //     resolve('成功')
+    //   }, 2000)
+    // }).then(data => data + 'jfld').then((data) => {
+    //   console.log('xx2');
+    //   console.log(data);
+    //   resolve(data)
+    // });
+
+    Promise.resolve(new Promise((resolve, reject) => {
+      resolve('你好')
+    })).then(res => {
+      console.log(res);
+    }, err => {
+      console.log(err);
+    })
+  
+  </script>
+</body>
+</html>
