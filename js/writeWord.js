@@ -113,10 +113,6 @@ window.onload = function() {
     return w;
   }
 
-  function preventVague(ctx) {
-    ctx.scale(1/devicePixelRatio, 1/devicePixelRatio)
-  }
-
   function render(ctx, x, y, w) {
     ctx.beginPath();
     ctx.lineWidth = w;
@@ -129,33 +125,25 @@ window.onload = function() {
     ctx.stroke();
     ctx.closePath();
   }
-  renderGrid(context);
 
   // 下载图片
   const downloadBtn = document.getElementById('download');
-  downloadBtn.addEventListener('click', (event) => {
-    const url = canvas.toDataURL()
-    const img = new Image()
-    img.src = url
-    img.onload = () => {
-      getDownloadImg(img)
-    }
-  });
-
-  function getDownloadImg(img) {
+  downloadBtn.addEventListener('click', () => {
     const canvas2 = document.createElement('canvas')
     canvas2.width = canvas.width/devicePixelRatio
     canvas2.height = canvas.height/devicePixelRatio
     const ctx2 = canvas2.getContext('2d')
-    ctx2.drawImage(img, 0, 0, canvas.width, canvas.height, 0, 0, canvas2.width, canvas2.height)
+    ctx2.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, canvas2.width, canvas2.height)
     const newImg = document.createElement('img')
     const url = canvas2.toDataURL()
     newImg.src = url
-    newImg.onload = (event) => {
+    newImg.onload = () => {
       const a = document.createElement('a')
       a.href = url
       a.setAttribute('download', '图片');
       a.click();
     }
-  }
+  });
+  
+  renderGrid(context);
 }
