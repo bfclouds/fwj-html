@@ -1,0 +1,113 @@
+.date-calendar {
+  width: 300px;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #fff;
+}
+.date-calendar .date-calendar-header {
+  text-align: center;
+}
+.date-calendar .date-calendar-header i {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 50%;
+  cursor: pointer;
+  user-select: none;
+}
+.date-calendar .date-calendar-header i.is-disable {
+  cursor: no-drop;
+}
+.date-calendar .date-calendar-header i.icon_double_left_block,
+.date-calendar .date-calendar-header i.icon_double_right_block {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABn0lEQVR4Ae2Zg46kURSE93XWtn+ubdu2bdv27uusbY1tVUfjE5zBuelK8o0rqfpG3fe2ideNSmoogAIogAIogAIogAIogAIogAIogAIooOXwff9FGIaTNXkw17YAoXwQBJUJEhI0eby9wrYAoXxNCZo82GRZgFy+pgRFHp/b3aoClOVfaPLgled57QwIMDpeIDnGCyTHeAHnx2txfLwex8frcXy8HsfH63F8vB5nxlsWMBGUNzYCA6Zp8uCA+fMAjByHoiXCE51Zmjw4YkaA8J0chaIFgoR5mjw4Yf5ECCOHo2iuMGKRMn/G/JEYSsYgSxixTJm/YEaA8OMcgHRhxCpl/or5Q1HP84ZiRIowYp0mj8/dMCNA+J0ehLJ/BQmbNHlIuGP+VBhFB4BfgoRtmjwkPDB/KoySfVH2uzBilzL/xIYA+Xe6F4p+EUbsU+ZfmD8Wj6KoO4p+bHC8Ig/uu3Qx0hWF39Ucr8mDK85djXme1wnFXyfGa/LguLu3w3HcvuXzvB6nAAqgAAqgAAqgAAqgAAqgAAqgAAqgAAqggCpf+VDZZ4WjHwAAAABJRU5ErkJggg==");
+}
+.date-calendar .date-calendar-header i.icon_left_block,
+.date-calendar .date-calendar-header i.icon_right_block {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABQ0lEQVR4AWJwL/AZ0RjQnh1gVBCGURheUEQiIhGRCJHMzCeEEEIIIbSe9hMRERERESFS5y5gDqgxnf/FARe8j/+7MAAAAAAA8xkAAAAAAAAAAAAAAAAA0Pf9TVUdZgOY+GEYvhf7a4RZx0+BMO/4CRD+RfzitwleQGq8XwPxfg3E+zUQ79dAvF8D8X4NxPs1EO/XQLxfePwMABR6oNCvMQStzwDwCPtC+DQv4SgAwK+q9hT7MYbQdd1xBoBH2FXsuzmHkwwAfw472ps5h9MMAP8SthX7al7CWQaAR9hS6It5CecZAB5hU7HP5o/xIgPATKEb2pM5h8sMAI+wrif/aM7hKgPAI6wp9MGcw3UGgFlVrQrh3sfnfxhZ0e58fP6nsWXt1sfnfxxd4vM4AAAAAAAAAAAAAAAAAAAAAAAAAAAAv78fTt719GEbH1oAAAAASUVORK5CYII=");
+}
+.date-calendar .date-calendar-header i.icon_double_left_grey,
+.date-calendar .date-calendar-header i.icon_double_right_grey {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABm0lEQVR4Ae3ZAUcEQRwF8D5PEYmIRMSJQ+QIUQhJOBxCcUK7b3eFcAhRCPt5ioiIiIiIEKk/YokdeMzM2IcHeOz7tc0xO9Ub9jsdAQhAAALwFwEIQAACEIAABCAAAQhAAEVR1JYB08/zfJsGCDj+5y8Dpg9gnwIIPL5B4PojAiD4+AaB6x+HBGDH12T/tizLaR6gM+ObdHR8k46Ob5L+eDLpjyeT/ngy6Y8nk/54MumPJ5P++AgANizfbSNswCbZP4n+PgDAuuXL8ZfcIvunHgBohL7l0zFih+wX0d8I2eu6Zs/50TYCwC7Tt5xFfyVm11Q9e9B3B8Ie2T/3BkAcjKsA3tpG2MgDpg9gEv2lKIAVe9hXB8KQ6QO48AZAnAnLAF4c/9Mjsn/pDYA4E5YAPDtGHJL9a28AxJmwaHlyvM5HTN9y4w2AeBMWADw6EMZM31JHfy1eVdU8gIe28UT/KpkPI1mWzdlD3/8fT/QnKX4amwVwZxmTfYT7FeDPhBn/fX0eF4AABCAAAQhAAAIQgAAEIAABCEAAAhDAL31oyGMvLuZtAAAAAElFTkSuQmCC");
+}
+.date-calendar .date-calendar-header i.icon_left_grey,
+.date-calendar .date-calendar-header i.icon_right_grey {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABQ0lEQVR4Ae3ZgUYFQRjF8d4nIhGRiLjiIhIhhBDCIoQQsLu7+yT7PhERERERESJ1EAfMAMPc7xz8Aazzsz6YtUWzlM4ABjCAAaQzgAEMYADpDGAAAxigxgwwDMOMTvQAOP73v6IItY8vjlD/+MIIqzJ+LvVd0fFMdDwTHc9ExzPR8Ux0PBMdz0THM9HxLMD4+gGO0U8KYRzH06AArO/7I/SdQkBncQGIsERfGYTzoAAMv/shhn6mEAB0ERSAdV23wNiPDMJlXAAexgMMfU8hAOkqLgBvwj7GvmUQmrgAvAl7gHhNIaDruAC8CbtAeMkg3MQF4E3YQc+Zw3gbF4B/wjaGPmUQ7oICsGmatjD0MT0+LABr23YTox8S42WexjYw/J7jlQB4E9b9PF4+AxjAAAYwgHQGMIABDCCdAQxgAAMYQLk/zlB2Ovu/SGAAAAAASUVORK5CYII=");
+}
+.date-calendar .date-calendar-header .left {
+  float: left;
+}
+.date-calendar .date-calendar-header .left i {
+  margin-left: 10px;
+}
+.date-calendar .date-calendar-header .right {
+  float: right;
+}
+.date-calendar .date-calendar-header .right i {
+  transform: rotate(180deg);
+}
+.date-calendar .date-table {
+  width: 100%;
+  text-align: center;
+  border-spacing: 0;
+  font-size: 12px;
+  user-select: none;
+}
+.date-calendar .date-table th {
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+}
+.date-calendar .date-table td {
+  position: relative;
+  width: 37px;
+  height: 30px;
+  padding: 4px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+}
+.date-calendar .date-table .date-table_row .date-table_col {
+  color: #c0c4cc;
+  cursor: no-drop;
+}
+.date-calendar .date-table .date-table_row .date-table_col.available {
+  color: #595959;
+  cursor: pointer;
+}
+.date-calendar .date-table .date-table_row .date-table_col.today {
+  color: #409eff;
+  font-weight: 500;
+}
+.date-calendar .date-table .date-table_row .date-table_col.active {
+  color: #fff;
+}
+.date-calendar .date-table .date-table_row .date-table_col.active .date-table-cell {
+  margin-left: 5px;
+  margin-right: 5px;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background-color: #d9ecff;
+}
+.date-calendar .date-table .date-table_row .date-table_col.active .date-table-cell_text {
+  background-color: #409eff;
+}
+.date-calendar .date-table .date-table_row .date-table_col .date-table-cell {
+  height: 30px;
+}
+.date-calendar .date-table .date-table_row .date-table_col .date-table-cell .date-table-cell_text {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 50%;
+  transform: translate(-50%);
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 50%;
+}

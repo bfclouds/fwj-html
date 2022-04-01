@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./js/date.js"></script>
+  <link rel="stylesheet" href="./css/date.css">
+</head>
+<body>
+  <div id="start-date"></div>
+
+  <script>
+    const startDate = new AffiliateDate('#start-date', {
+      minDate: '2022-2-21',
+      // maxDate: null,
+      // selectedDate: '2022-2-21',
+      // currentYm: '2022-2'
+    }, (res) => {
+      console.log(res);
+      alert(`你选择了： ${res}`)
+    })
+  </script>
+</body>
+</html>
