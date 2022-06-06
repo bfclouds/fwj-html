@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .list {
+      /* display: flex; */
+      position: relative;
+    }
+    .item {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 4px;
+      cursor: pointer;
+      /* background-color: #eee; */
+    }
+    .enter-share {
+      background-color: #eee;
+    }
+    .mask {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+    .group {
+      position: absolute;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding: 20px;
+      width: 100px;
+      height: 100px;
+      border-radius: 4px;
+      background-color: #999;
+      box-sizing: border-box;
+    }
+    .group::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .group .item {
+      position: static !important;
+      left: auto !important;
+      right: auto !important;
+      margin-right: 4px;
+      margin-bottom: 4px;
+      width: 30px;
+      height: 30px;
+      font-size: 12px;
+      background-color: #eee;
+    }
+    .group.show-big {
+      /* position: fixed;
+      width: 80%;
+      height: 120px; */
+      z-index: 9;
+      box-shadow: 0 0 8px 0 #666;
+      transition: all .3s linear;
+      z-index: 9;
+    }
+    .group.show-big::after {
+      width: 0;
+      height: 0;
+    }
+    .group.show-big .enter-share {
+      background-color: transparent;
+    }
+    .group.show-big .item {
+      position: relative !important;
+      left: auto !important;
+      right: auto !important;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+  <div class="list">
+    <div class="mask"></div>
+    <!-- <div class="group show-big">
+      <div class="item">item1</div>
+      <div class="item">item1</div>
+    </div> -->
+  </div>
+
+  <script>
+    const list = document.querySelector('.list')
+    const data = ['item1','item2','item3','item4','item5','item6']
+    const maskDom = document.querySelector('.mask')
+    let onDragDom = null
+    let onSelectedGroup = null
+
+    data.forEach((item, index) => {
+      const itemDom = document.createElement('div')
+      itemDom.classList.add('item')
+      itemDom.innerText = `item${index}`
+      itemDom.style.left = `${index * 120}px`
+      itemDom.style.top = `20px`
+      itemDom.setAttribute('draggable', true)
+
+      itemDom.ondragstart = (event) => {
+        onDragDom = event.currentTarget
+      }
+
+      itemDom.ondragenter = (event) => {
+        const enterDom = event.currentTarget
+        if (onDragDom.contains(enterDom)) {
+          return
+        }
+        enterDom.classList.add('enter-share')
+        this.enterTimer = setTimeout(() => {
+          const group = document.createElement('div')
+          group.setAttribute('draggable', true)
+          groupBindEvent(group)
+
+          group.classList.add('group')
+
+          const siblingDom = enterDom.nextElementSibling;
+          const parentNode = enterDom.parentNode
+
+          const left = enterDom.style.left
+          const top = enterDom.style.top
+          group.style.left = left
+          group.style.top = top
+
+          group.dataset.position = JSON.stringify({left, top})
+
+          onSelectedGroup = group
+
+          group.append(enterDom)
+          parentNode.insertBefore(group, siblingDom)
+          setTimeout(() => {
+            const react = group.getBoundingClientRect()
+            console.log(react);
+
+            group.dataset.relativePosition = JSON.stringify({
+              left: react.left,
+              top: react.top,
+              width: react.width,
+              height: react.height
+            })
+            maskDom.style.display = 'block'
+            group.classList.add('show-big')
+            group.style.position = 'fixed'
+            group.style.top = `calc((100vh - 120px)/2)`
+            group.style.left = '10%'
+            group.style.width = '80%'
+            group.style.height = '120px'
+          })
+        }, 1000)
+      }
+      itemDom.ondragleave = (event) => {
+        clearTimeout(this.enterTimer)
+        const enterDom = event.currentTarget
+        enterDom.classList.remove('enter-share')
+      }
+      itemDom.ondrop = (event) => {
+        console.log(123);
+      }
+      itemDom.ondragend = (event) => {
+        console.log(onSelectedGroup)
+        if (onSelectedGroup && event.currentTarget.contains(onSelectedGroup)) {
+          closeGroup()
+        }
+      }
+
+      list.append(itemDom)
+    })
+
+    maskDom.addEventListener('click', () => {
+      if (onSelectedGroup) {
+        closeGroup()
+      }
+    })
+
+    function closeGroup() {
+      maskDom.style.display = 'none'
+      const relativePosition = JSON.parse(onSelectedGroup.dataset.relativePosition)
+
+      console.log(`relativePosition: ${relativePosition.left} ${relativePosition.top}`);
+      onSelectedGroup.style.left = `${relativePosition.left}px`
+      onSelectedGroup.style.top = `${relativePosition.top}px`
+      onSelectedGroup.style.width = '100px'
+      onSelectedGroup.style.height = '100px'
+      
+      setTimeout(() => {
+        onSelectedGroup.classList.remove('show-big')
+        onSelectedGroup.position = 'absolute'
+        const position = JSON.parse(onSelectedGroup.dataset.position)
+        onSelectedGroup.style.left = position.left
+        onSelectedGroup.style.top = position.top
+        onSelectedGroup = null
+      }, 1000)
+    }
+
+    function groupBindEvent(group) {
+      group.ondragenter = (event) => {
+        if (onSelectedGroup && onSelectedGroup.contains(group)) {
+          return
+        }
+        this.enterTimer = setTimeout(() => {
+          group.classList.add('show-big')
+          const position = JSON.parse(group.dataset.position)
+          group.style.position = 'fixed'
+          group.style.left = position.left
+          group.style.top = position.top
+
+          onSelectedGroup = group
+          setTimeout(() => {
+              maskDom.style.display = 'block'
+              group.classList.add('show-big')
+              group.style.top = `calc((100vh - 120px)/2)`
+              group.style.left = '10%'
+              group.style.width = '80%'
+              group.style.height = '120px'
+            })
+        }, 1000)
+      }
+      group.ondragover = (event) => {
+        event.preventDefault()
+        // console.log(event.currentTarget);
+      }
+      group.ondrop = (event) => {
+        group.append(onDragDom)
+      }
+    }
+  </script>
+</body>
+</html>
